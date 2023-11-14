@@ -25,6 +25,10 @@ function CreateArea(props) {
       [name]: value
     }));
   }
+  useEffect(() => {
+    setIsSubmitted(false);
+  }, [isSubmitted]);
+
 
   function submitNote(event) {
     setIsSubmitted(true);

@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState , useEffect} from 'react';
 import NewHeader from './newHeader';
 import SearchField from './searchField'; // Note: I've updated the component name to follow the common convention of starting with an uppercase letter.
 import Post from './Post';
@@ -10,6 +10,8 @@ import MyReviews from "./MyReviews";
 function App() {
   
   console.log("App component is rendering.");
+
+
   const[userEmail,setUserEmail] =useState("");
   const[isRegister, setIsregister] =useState(false);
   const[data,setData]=useState(false);
@@ -46,8 +48,17 @@ function App() {
     setIsregister(true);
     console.log(data);
     setUserEmail(data);
+    
   }
-  
+  useEffect(() => {
+    // Check if the user is already authenticated (information in localStorage)
+    const storedUserEmail = localStorage.getItem("userEmail");
+    if (storedUserEmail) {
+      setIsregister(true);
+      setUserEmail(storedUserEmail);
+    }
+  }, []); // Run this useEffect only once when the component mounts
+
   return (
 <Router>
   <div>
@@ -56,13 +67,13 @@ function App() {
     {data && (
   <div>
     <Post poster={src} plot={moviePlot} title={movieTitle} />
-    <Review title={movieTitle} register={isRegister} />
+    <Review title={movieTitle} register={isRegister} email={userEmail}/>
   </div>
 )}
 
     <Routes>
       <Route path="/register" element={<Register handelRegister={handelRegister}/>} />
-      <Route path="/myReviews" element={<MyReviews />} />
+      <Route path="/myReviews" element={<MyReviews email={userEmail}/>} />
       <Route
         path="/"
         element={

@@ -37,7 +37,7 @@ function Review(props){
     
       function addNote(newNote) {
         console.log(newNote);
-        sendRequest('/add', 'POST', { newItem: newNote })
+        sendRequest('/add', 'POST', { newItem: newNote, email: props.email})
           .then((response) => {
             if (response.data.success) {
               setNotes((prevNotes) => [...prevNotes, response.data.newItem]);

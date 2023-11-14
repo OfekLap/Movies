@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const Register = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,11 +14,13 @@ const Register = (props) => {
         email,
         password,
       });
-      
+
       if (response.status === 200) {
         setMessage("User registered successfully!");
         props.handelRegister(email);
-        navigate('/'); 
+
+        // Store user information in localStorage
+        localStorage.setItem("userEmail", email);
       } else {
         setMessage("Failed to register user.");
       }
@@ -28,6 +29,7 @@ const Register = (props) => {
       setMessage("Submission error. Please try again.");
     }
   };
+
 
   return (
     <div className="container mt-3 card">

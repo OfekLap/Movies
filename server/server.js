@@ -48,18 +48,31 @@ app.get('/getNotes', async (req, res) => {
   }
 });
 
+app.get('/myReviews', async (req, res) => {
+  try {
+    const { email } = req.query; 
+    console.log("the recived email:" + email);
+    const notes = await db.query('SELECT * FROM todolist WHERE user_email = $1 ORDER BY id ASC', [email]);
+    res.json(notes.rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: 'An error occurred while fetching notes.' });
+  }
+});
+
 
 app.post('/add', async (req, res) => {
   const title = req.body.newItem.title;
   const content = req.body.newItem.content;
   const rating = req.body.newItem.rating;
-
-  
+  const user_email = req.body.email;
+   console.log(user_email);
   try {
-    const result = await db.query('INSERT INTO todolist (content, title, rating) VALUES ($1, $2, $3) RETURNING *', [
+    const result = await db.query('INSERT INTO todolist (content, title, rating, user_email) VALUES ($1, $2, $3, $4) RETURNING *', [
       content,
       title,
       rating,
+      user_email,
     ]);
     res.json({ success: true, newItem: result.rows[0] });
   } catch (err) {

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const headingStyle = {
   fontSize: '4em',
@@ -10,6 +12,8 @@ const buttonStyle = {
 };
 
 function NewHeader(props) {
+  const navigate = useNavigate();
+
   const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
@@ -17,7 +21,7 @@ function NewHeader(props) {
       const headerElement = document.getElementById('headerContainer');
       const headerOffset = headerElement.offsetTop;
       const windowHeight = window.innerHeight;
-      const newHeight = Math.min(Math.max(windowHeight - headerOffset, 100), 300); // Adjust the min and max height here
+      const newHeight = Math.min(Math.max(windowHeight - headerOffset, 100), 300);
       setHeaderHeight(newHeight);
     };
 
@@ -42,18 +46,51 @@ function NewHeader(props) {
     justifyContent: 'center',
     alignItems: 'center',
   };
- 
+
+  function logout() {
+    axios.post('http://localhost:4000/logout')
+      .then(response => {
+        console.log(response.data);
+        localStorage.removeItem("userEmail");
+        props.logout();
+      })
+      .catch(error => {
+        console.error('Logout error:', error);
+      });
+  }
   
   return (
     <div id="headerContainer" className="position-relative overflow-hidden" style={headerStyle}>
       <div>
         <h1 style={headingStyle}>OOMDB</h1>
         <p style={{ fontSize: '1.5em' }}>SEE THE LATEST REVIEWS!</p>
-        {!props.register  &&  <a className="btn btn-primary" style={buttonStyle} href="register">
-          REGISTER
-        </a>}
-        <a href="/myReviews" className="btn btn-primary" style={buttonStyle}>MY REVIEWS</a>
-        <a href="/" className="btn btn-primary" style={buttonStyle}>HOME</a>
+
+        {!props.register ? (
+          <div>
+            <Link className="btn btn-primary" style={buttonStyle} to="register">
+              REGISTER
+            </Link>
+            <Link className="btn btn-primary" style={buttonStyle} to="login">
+              LOGIN
+            </Link>
+          </div>
+        ) : (
+          <div>
+            <button
+              className="btn btn-primary"
+              style={buttonStyle}
+              onClick={() => navigate("/myReviews")}
+            >
+              MY REVIEWS
+            </button>
+            <Link to="/" className="btn btn-success" style={buttonStyle}>
+              HOME
+            </Link>
+            <Link to="/" onClick={logout} className="btn btn-dark" style={buttonStyle}>
+              LOGOUT
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import Register from "./register"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Review from './Review';
 import MyReviews from "./MyReviews";
+import Login from './Login';
 
 function App() {
   
@@ -44,25 +45,32 @@ function App() {
   }
   }
     
-  function handelRegister(data){
+  function handelRegister(data) {
     setIsregister(true);
-    console.log(data);
     setUserEmail(data);
-    
+    localStorage.setItem("userEmail", data);
   }
+  
   useEffect(() => {
     // Check if the user is already authenticated (information in localStorage)
     const storedUserEmail = localStorage.getItem("userEmail");
-    if (storedUserEmail) {
+    if (storedUserEmail && !userEmail) {
       setIsregister(true);
       setUserEmail(storedUserEmail);
     }
-  }, []); // Run this useEffect only once when the component mounts
+  }, [userEmail]);
+  
+
+function logout(){
+  setIsregister(false);
+      setUserEmail("");
+}
+
 
   return (
 <Router>
   <div>
-    <NewHeader submitNote={submitNote} register={isRegister} />
+    <NewHeader submitNote={submitNote} register={isRegister} logout={logout}/>
     <SearchField onSearchData={handleSearchData} />
     {data && (
   <div>
@@ -73,6 +81,7 @@ function App() {
 
     <Routes>
       <Route path="/register" element={<Register handelRegister={handelRegister}/>} />
+      <Route path="/login" element={<Login handelRegister={handelRegister}/>} />
       <Route path="/myReviews" element={<MyReviews email={userEmail}/>} />
       <Route
         path="/"

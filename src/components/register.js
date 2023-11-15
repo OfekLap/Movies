@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = (props) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -18,7 +20,7 @@ const Register = (props) => {
       if (response.status === 200) {
         setMessage("User registered successfully!");
         props.handelRegister(email);
-
+        navigate("/");
         // Store user information in localStorage
         localStorage.setItem("userEmail", email);
       } else {

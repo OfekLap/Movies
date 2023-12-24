@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { UserContext } from "./App";
+import SearchField from "./searchField";
 
 const headingStyle = {
   fontSize: "4em",
@@ -11,9 +13,9 @@ const buttonStyle = {
   margin: "10px",
 };
 
-function NewHeader(props) {
+function NewHeader() {
   const navigate = useNavigate();
-
+  const { setUserEmail, setIsregister, isRegister } = useContext(UserContext);
   const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
@@ -44,7 +46,7 @@ function NewHeader(props) {
     color: "white",
     textAlign: "center",
     textShadow: "2px 2px 4px #000",
-    height: `${headerHeight}px`,
+
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -56,8 +58,8 @@ function NewHeader(props) {
       .post("http://localhost:4000/logout")
       .then((response) => {
         console.log(response.data);
-        localStorage.removeItem("userEmail");
-        props.logout();
+        setIsregister(false);
+        setUserEmail("");
       })
       .catch((error) => {
         console.error("Logout error:", error);
@@ -67,7 +69,7 @@ function NewHeader(props) {
   return (
     <div
       id="headerContainer"
-      className="position-relative overflow-hidden"
+      className="h-75 flex flex-row space-x-52 mt-4 rounded-lg"
       style={headerStyle}
     >
       <div>
@@ -81,7 +83,7 @@ function NewHeader(props) {
         </h1>
         <p style={{ fontSize: "1.5em" }}>SEE THE LATEST REVIEWS!</p>
 
-        {!props.register ? (
+        {!isRegister ? (
           <div>
             <Link className="btn btn-primary" style={buttonStyle} to="register">
               REGISTER
@@ -113,6 +115,7 @@ function NewHeader(props) {
           </div>
         )}
       </div>
+      <SearchField />
     </div>
   );
 }

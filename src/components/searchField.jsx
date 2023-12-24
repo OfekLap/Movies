@@ -1,42 +1,41 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "./App";
+import { useQueryClient } from "@tanstack/react-query";
 
-const SearchField = (props) => {
+function SearchField() {
+  const [search, setSearch] = useState("");
+  const { setSearchTerm } = useContext(UserContext);
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  console.log("render");
+  const queryClient = useQueryClient();
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
+    queryClient.invalidateQueries({ queryKey: ["movies"] });
     e.preventDefault();
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/search?title=${searchTerm}`
-      );
-      console.log("Search results:", response.data);
-      props.onSearchData(response.data);
-      navigate("/movie");
-      // Process the response or set state with the received data
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      // Handle error, set an error state, or display a message to the user
+    if (search.trim() !== "") {
+      setSearchTerm(search);
+      navigate("/allMovies");
     }
   };
-
   return (
-    <form onSubmit={(e) => handleSearch(e)}>
+    <form className="flex gap-5 ">
       <input
         type="text"
         placeholder="Search..."
-        className="input-field"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-240 h-30 bg-slate-900 placeholder-teal-50 rounded-full border-solid border-5 border-cyan-100"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
-      <button type="submit" className="search-button">
+      <button
+        className=" bg-slate-900 rounded-full text-teal-50 border-solid border-5 border-cyan-100 w-30"
+        type="submit"
+        onClick={(e) => handleSearch(e)}
+      >
         Search
       </button>
     </form>
   );
-};
+}
 
 export default SearchField;

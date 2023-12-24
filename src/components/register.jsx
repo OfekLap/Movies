@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "./App";
+import toast from "react-hot-toast";
 
-const Register = (props) => {
+function Register() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
- 
+  const { setUserEmail, setIsregister } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,27 +21,28 @@ const Register = (props) => {
 
       if (response.status === 200) {
         setMessage("User registered successfully!");
-        props.handelRegister(email);
         navigate("/");
-        // Store user information in localStorage
-        localStorage.setItem("userEmail", email);
+        setUserEmail(email);
+        setIsregister(true);
+        toast.success("Registered successfully");
       } else {
         setMessage("Failed to register user.");
       }
     } catch (error) {
+      toast.error("Failed to register user.");
       console.error("Submission error:", error);
       setMessage("Submission error. Please try again.");
     }
   };
 
-
   return (
-    <div className="container mt-3 card">
-      <h1>Register</h1>
-      <form className="register-form" onSubmit={handleSubmit}>
+    <div className="container mt-14 card bg-stone-200">
+      <h1 className="font-semibold text-lg underline">Register</h1>
+      <form className="font-semibold " onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
           <input
+            className="flex flex-grow"
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -48,16 +51,19 @@ const Register = (props) => {
         <div>
           <label>Password:</label>
           <input
+            className="flex flex-grow"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Submit</button>
+        <button className="mt-3 font-bold text-lg" type="submit">
+          Submit
+        </button>
       </form>
       <p>{message}</p>
     </div>
   );
-};
+}
 
 export default Register;

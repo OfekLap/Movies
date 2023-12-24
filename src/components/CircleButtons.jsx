@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 function CircleButtons(props) {
   const [activeButton, setActiveButton] = useState("");
@@ -6,20 +6,18 @@ function CircleButtons(props) {
 
   useEffect(() => {
     // Reset active button when isSubmitted changes
-    console.log("isSubmitted changed:", props.isSubmitted);
+
     if (props.isSubmitted) {
       setActiveButton("");
     }
   }, [props.isSubmitted]);
-  
 
-  const handleButtonClick = (number) => {
-    console.log("Button clicked, isSubmitted:", props.isSubmitted);
+  function handleButtonClick(number) {
     if (props.isSubmitted) {
       // If the form is submitted, do nothing
       return;
     }
-  
+
     if (activeButton === number) {
       // If the same button is clicked, deactivate it
       setActiveButton("");
@@ -29,16 +27,16 @@ function CircleButtons(props) {
       setActiveButton(number);
       props.handleRating(number);
     }
-    console.log(`Button ${number} clicked`);
-  };
+  }
 
   return (
-    <div className="circle-buttons">
+    <div className=" flex gap-3 px-3 mt-2 h-40">
       {numbers.map((number) => (
         <button
           key={number}
-          // Always apply 'active' class when the button is active
-          className={`circle-button ${activeButton === number ? 'active' : ''}`}
+          className={`text-stone-200 rounded-full w-9 h-8 hover:bg-stone-500 transition-all ${
+            activeButton === number ? "bg-stone-500 active" : "bg-stone-700"
+          }`}
           onClick={() => handleButtonClick(number)}
         >
           {number}
@@ -49,5 +47,3 @@ function CircleButtons(props) {
 }
 
 export default CircleButtons;
-
-

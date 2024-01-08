@@ -2,9 +2,9 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
 
 /* Your custom styles go here */
-
 body {
   background-color: #030303;
 }

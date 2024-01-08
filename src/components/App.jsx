@@ -8,6 +8,7 @@ import { createContext } from "react";
 import { Toaster } from "react-hot-toast";
 import AllMovies from "./AllMovies";
 import Slider from "./Slider";
+import Home from "./Home";
 
 export const UserContext = createContext();
 function App() {
@@ -32,24 +33,13 @@ function App() {
 
           <Routes>
             <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Slider>Movies of the week</Slider>} />
             <Route
               path="/myReviews"
               element={<MyReviews email={userEmail} />}
             />
-            <Route
-              path="/"
-              element={
-                <div className="bg-yellow-50 h-full">
-                  {searchTerm === "" && (
-                    <h1 className="h-full">
-                      Search for your favorite movies!🍿🍿🍿
-                    </h1>
-                  )}
-                </div>
-              }
-            />
+
             <Route
               path="/allMovies"
               element={<AllMovies searchTerm={searchTerm} />}
